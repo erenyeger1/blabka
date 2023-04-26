@@ -1,0 +1,33 @@
+ - hosts: clients
+   tasks:
+     - name: apt update
+       command: apt update
+     - name: install curl
+       apt: pkg=curl state=latest
+     - name: ufw activate
+       command: systemctl start ufw
+     - name: activate port 8080 from ufw
+       ufw:
+        rule: allow
+        port: 8080
+     - name: activate port 80 from ufw
+       ufw:
+        rule: allow
+        port: 80
+     - name: activate port 2233 from ufw
+       ufw:
+        rule: allow
+        port: 2233
+     - name: change port for ssh
+       lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: ''
+        insertafter: EOF
+        line: Port 2233
+     - name: activate PubKey authentication  
+       lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: ''
+        insertafter: EOF
+        line: PubkeyAuthentication yes
+       
